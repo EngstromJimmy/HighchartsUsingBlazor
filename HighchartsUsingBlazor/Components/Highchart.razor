@@ -1,0 +1,25 @@
+﻿@inject Microsoft.JSInterop.IJSRuntime jsruntime;
+
+<div id="@id.ToString()"></div>
+
+@code
+{
+    [Parameter] public string Json { get; set; }
+    private string id { get; set; } = "Highchart" + Guid.NewGuid().ToString();
+
+
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+        base.OnParametersSet();
+    }
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!string.IsNullOrEmpty(Json))
+        {
+            await jsruntime.InvokeAsync<string>("loadHighchart", new object[] { id, Json });
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
